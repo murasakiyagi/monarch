@@ -1,0 +1,8 @@
+-encoding UTF-8
+-d mods/eventmod/
+src/eventmod/module-info.java
+src/eventmod/event/HandlerFace.java
+src/eventmod/event/Information.java
+src/eventmod/event/Keys.java
+src/eventmod/event/SceneSetOn.java
+src/eventmod/event/SetOnFace.java

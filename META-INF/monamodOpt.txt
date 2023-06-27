@@ -1,0 +1,5 @@
+-g
+--add-modules monamod
+-d mods/monamod
+--class-path item/pict:mods
+--source-path src/monamod:src/eventmod:src/enginemod
