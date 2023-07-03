@@ -35,7 +35,7 @@ public class Img {
 	private URL url;
 	
 	
-	private String absoPath = "/Users/yngt/program/myjava/source/img/pict/";
+	private String absoPath = "source/img/pict/";
 	
 	private String[] allPath;
 	private String[] hakoPath;
