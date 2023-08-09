@@ -7,8 +7,9 @@ import javafx.util.*;
 
 //オリジナルパック
 import engine.QuickUtil;
-import monarch.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 import state.Work;
+import monarch.Paneler;
 
 public class BuildTask implements TaskFace {
 
@@ -27,13 +28,26 @@ public class BuildTask implements TaskFace {
 
 	@Override
 	public void action() {
-// 		un.create();
-		System.out.println("BUILD TASK");
+// 		boolean boo = Paneler.build();//Panelerに問い合わせ
+			boolean boo = Paneler.setBuild(un.getTgtPd(), un.getTeam());
+// 			print(boo, un.getTgtPd());
+ 			if(boo) { build(); }
 	}
 
 	@Override
 	public void setUnit(Unit un) {
 		this.un = un;
+	}
+	
+	private void build() {
+		if(un.getHp() > 50) {
+
+	 		un.create();
+	 		un.addHp(-50);
+// 			print("CREATE ", un.getTgtPd());
+		} else {
+// 			print("NOT CREATE");
+		}
 	}
 	//------------------------------------------
 	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫

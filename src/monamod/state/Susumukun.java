@@ -6,8 +6,8 @@ import java.util.*;
 import javafx.geometry.Point2D;
 
 //オリジナルパック
-import monarch.Unit;//
-import monarch.LoopCount;
+import unit.Unit;//
+import unit.Houkou;
 import monarch.Scouter;
 import monarch.ScouterD;
 import engine.P2Dcustom;//Point2Dcustom
@@ -79,6 +79,7 @@ public class Susumukun extends Statekun {
 
 	private void createWalkList(Point2D tgtpd) {
 		walkList = scout.guide(un, tgtpd);
+// 			printArr(un.getName(), walkList);
 		walkListD = ScouterD.division(walkList, deno, un.getRow(), un.getCol());
 	}
 
@@ -113,8 +114,25 @@ public class Susumukun extends Statekun {
 			un.setPdI( walkListD.get(progCnt) );
 			un.notifyObserver();
 			progCnt += cnt;
-				//if(un.whoName("HERO")) { print(un.getPd(), un.getPdD(), rounder(1.5, 2)); }
+				houkou();
+// 				if(un.whoName("HERO")) { print(un.getPd(), un.getPdD(), rounder(1.5, 2)); }
 		}
+
+			Houkou houkou = new Houkou();
+			private void houkou() {
+				try {
+					if(progCnt % 20 == 0) {
+						un.setHoukou(
+							houkou.houkou( walkListD.get(progCnt + 1), walkListD.get(progCnt) ) 
+						);
+// 								print(un.getHoukou());
+
+					}
+				} catch(Exception ex) {
+					print("HOUKOU EXCEPTION");
+				}
+			}
+
 
 		@Override
 		protected void goaled(boolean boo) {//目的地についた後
@@ -126,7 +144,7 @@ public class Susumukun extends Statekun {
 			work.nextProcess(boo);
 		}
 
-			private boolean prePd(Point2D tgtPd, Point2D nowPd) {
+			private boolean prePd(Point2D tgtPd, Point2D nowPd) {//tgtPd一歩手前
 				boolean kari = false;
 				if( tgtPd.add(1, 0).equals(nowPd) ) { kari = true; };
 				if( tgtPd.add(-1, 0).equals(nowPd) ) { kari = true; };

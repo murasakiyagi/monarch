@@ -35,7 +35,7 @@ public class Img {
 	private URL url;
 	
 	
-	private String absoPath = "source/img/pict/";
+	private String absoPath = "/Users/yngt/program/myjava/source/img/pict/";
 	
 	private String[] allPath;
 	private String[] hakoPath;
@@ -128,6 +128,7 @@ public class Img {
 		}
 	
 	
+// 	url.toString()
 	public String[] getHakoUrls() {
 		return hakoUrls;
 	}

@@ -5,7 +5,7 @@ import java.util.*;
 
 //オリジナルパック
 import engine.QuickUtil;
-import monarch.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 
 
 public class Statekun implements StateFace {

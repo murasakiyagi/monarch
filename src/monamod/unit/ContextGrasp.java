@@ -1,11 +1,16 @@
-package monarch;
+package unit;
 
 import java.io.*;
 import java.util.*;
 
 import javafx.geometry.Point2D;
 
-import monarch.Unit;
+import engine.QuickUtil;
+import monarch.Scouter;
+import monarch.FieldManager;
+import monarch.FtcntMapping;
+import monarch.Monaserver;
+
 
 //状況把握
 public class ContextGrasp {
@@ -18,11 +23,14 @@ public class ContextGrasp {
 	Map<Unit, Integer> unitMap;
 	
 	Scouter scout;
+	FieldManager fm;
+	FtcntMapping ft;
 
-
-	public ContextGrasp(Map<Unit, Integer> unitMap) {
-		this.unitMap = unitMap;
+	public ContextGrasp(UnitManager mana) {
+		this.unitMap = mana.getUnitMap();
 		this.scout = new Scouter();//FieldMasuに持たせたい。
+		this.fm = mana.getFm();
+		this.ft = fm.getFt();
 	}
 
 
@@ -30,7 +38,10 @@ public class ContextGrasp {
 		if( !un.equals(un2) ) {
 			setUnit(un, un2);
 			int kari = checkContext();
-			if( kari == 2 ) {//warningは互いが戦闘体制
+			if(kari == 3) {
+				setUrgency(un, un2, 3);
+				setUrgency(un2, un, 3);
+			} else if( kari == 2 ) {//warningは互いが戦闘体制
 				guilt();
 			} else if( kari == 1 ) {//cautionは一方的に危険視
 				setUrgency(un, un2, Math.max(unitMap.get(un), 1));//unitMap.get(un)==0 ~ 2
@@ -64,8 +75,9 @@ public class ContextGrasp {
 		numAddOne( isHuman(un2) );//相手
 		numAddOne( isEnemy() );//敵か
 		numAddOne( isStrong() );//強いか
-		numAddOne( isNear(3.1) );//近いか
-		numAddOne( isNear(1.1) );//隣か
+		numAddOne( isNear(3.05) );//近いか
+		numAddOne( isNear(1.05) );//隣か
+		numAddOne( isNear(0.5) );//重なるか
 		return stateNum( numBy.toString() ) ;
 	}
 	
@@ -83,8 +95,12 @@ public class ContextGrasp {
 
 	public int stateNum(String numBy) {
 		int kari = 0;
-		if(numBy.equals("111111")) { kari = 2; }
-		if(numBy.equals("111110")) { kari = 1; }
+		if(numBy.equals("1111110")) { kari = 2; }
+		if(numBy.equals("1111100")) { kari = 1; }
+		if(numBy.equals("1011110")) { kari = 2; }
+		if(numBy.equals("1010110")) { kari = 2; }
+		if(numBy.equals("1101111")) { kari = 3; }
+		if(numBy.equals("1100111")) { kari = 3; }
 		return kari;
 	}
 
@@ -113,8 +129,9 @@ public class ContextGrasp {
 	int sctCnt;//walkList.size()
 	private boolean isNear(double kyori) {
 		List<Point2D> list = new ArrayList<Point2D>();
-		list = scout.guide(un.getPd(), un2.getPd());
-		sctCnt = list.size();
+// 		list = scout.guide(un.getPd(), un2.getPd());
+// 		sctCnt = list.size();
+		sctCnt = ft.ftKyori(un.getPd(), un2.getPd());
 		if(sctCnt <= kyori) {
 			return true;
 		} else {
@@ -130,6 +147,11 @@ public class ContextGrasp {
 	
 
 
+	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
+	public void print(Object... objs) {
+		qu.print(objs);
+	}
+	
 /*	public void checkContext(Unit un, Unit un2) {
 		if( !isHuman(un) ) { return; }//
 		if( !isNear(un, un2) ) { return; }

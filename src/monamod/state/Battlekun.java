@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 //オリジナルパック
-import monarch.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 
 public class Battlekun extends Statekun {
 
@@ -41,7 +41,7 @@ public class Battlekun extends Statekun {
 	}
 
 		private void guilt() {//罪悪感
-			if((un.getHp() <= 10) | (work.getBtlHp() <= 10)) {
+			if((un.getHp() <= 0) | (work.getBtlHp() <= 0)) {
 				this.goaled(false);
 			} else {
 				damage();

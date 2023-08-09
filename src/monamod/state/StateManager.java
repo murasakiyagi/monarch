@@ -4,7 +4,8 @@ import java.io.*;
 import java.util.*;
 
 
-import monarch.Unit;
+import engine.QuickUtil;
+import unit.Unit;
 
 
 public class StateManager {
@@ -22,6 +23,8 @@ public class StateManager {
 		stateMap.put("AWY", new Awaykun(un, work) );
 		stateMap.put("BTL", new Battlekun(un, work) );
 		stateMap.put("STY", new Staykun(un, work) );
+		stateMap.put("GRW", new Growthkun(un, work) );
+		stateMap.put("JOI", new Joinkun(un, work) );
 	}
 
 
@@ -44,14 +47,12 @@ public class StateManager {
 		this.keep = stt;
 		if(stt != null) { isKeep = true; }
 		if(stt == null) { isKeep = false; }
-			//print("  KEEP STT  ", isKeep, stt, "-----------");
 	}
 
 	public StateFace reState() {//緊急対応直前のStateに戻す
 		isKeep = false;
 		StateFace kari = keep;
 		keep = null;
-			//print("  RESTT  ", isKeep, keep, kari,"-----------");
 		return kari;
 	}
 	
@@ -66,15 +67,10 @@ public class StateManager {
 
 
 	//--------------------------
+	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
 	protected void print(Object... objs) {
-		System.out.print(print0());
-		for(int i=0; i < objs.length; i++) {
-			System.out.print("  " + objs[i]);
-		}
-		System.out.println();
+		qu.print(objs);
 	}
-	protected String print0() {
-		return "  !" + getClass().getSimpleName() + "!  ";
-	}
+
 	
 }

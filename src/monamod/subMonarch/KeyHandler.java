@@ -1,4 +1,4 @@
-package monarch;
+package subMonarch;
 
 import java.io.*;
 import java.util.*;
@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
 
 import event.Keys;
 import event.HandlerFace;
-
+import monarch.GameControler;
 
 public class KeyHandler implements HandlerFace<KeyEvent> {
 
@@ -29,6 +29,7 @@ public class KeyHandler implements HandlerFace<KeyEvent> {
 		private void playStop() {
 			game.changePlay(keys.isP, keys.isQ);
 			game.butaiSetting(keys.isV);
+			game.debug(keys.isZ);
 		}
 
 

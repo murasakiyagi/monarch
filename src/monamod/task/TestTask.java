@@ -7,7 +7,7 @@ import javafx.util.*;
 
 //オリジナルパック
 import engine.QuickUtil;
-import monarch.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 import state.Work;
 
 public class TestTask implements TaskFace {

@@ -1,4 +1,4 @@
-package monarch;
+package unit;
 
 import java.io.*;
 import java.util.*;
@@ -21,6 +21,7 @@ import javafx.util.*;
 
 
 import engine.QuickUtil;
+import monarch.FieldMasu;
 
 /*has a
 UnitManager
@@ -33,7 +34,7 @@ BuildTask  Managerとの距離が離れているので悪いデザイン
 public class UnitCreater {
 
 
-	UnitManager mana;
+	private UnitManager mana;
 
 	//コンストラクタ
 	UnitCreater(UnitManager mana) {
@@ -44,15 +45,17 @@ public class UnitCreater {
 
 	//セッター-------------------------------------
 	//初期設定
-	public Unit humanCreate(int hp, int team, int imgNum, FieldMasu fl) {
-		Unit un = new HumanUnit(hp,team, imgNum, fl, mana);
-		UnitView view = new UnitView(un);
-		un.initialize();
+	public Unit humanCreate(int hp, int team, int imgNum) {
+		Unit un = new HumanUnit(hp,team, imgNum, mana);
+		UnitView view = new UnitView(un);//必須。オブザーブ関係構築
+		un.initialize();//必須
 		return un;
 	}
 
-	public Unit houseCreate(int hp, int team, int imgNum, FieldMasu fl) {
-		Unit un = new HumanUnit(hp,team, imgNum, fl, mana);
+	public Unit houseCreate(int hp, int team, int imgNum) {
+		Unit un = new HouseUnit(hp,team, imgNum, mana);
+		UnitView view = new UnitView(un);//必須。オブザーブ関係構築
+		un.initialize();//必須
 		return un;
 	}
 

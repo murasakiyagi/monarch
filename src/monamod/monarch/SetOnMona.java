@@ -12,6 +12,9 @@ import javafx.event.*;
 
 import event.SceneSetOn;
 import event.Keys;
+import subMonarch.KeyHandler;
+import subMonarch.MouseHandler;
+import subMonarch.ScrollHandler;
 
 public class SetOnMona extends SceneSetOn {
 

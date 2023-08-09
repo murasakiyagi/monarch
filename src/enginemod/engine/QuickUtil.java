@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 public class QuickUtil {
 	
 	Object that;
+	long cnt;
 	
 	public QuickUtil() {}
 	public QuickUtil(Object that) {
@@ -28,7 +29,7 @@ public class QuickUtil {
 	public void print(Object... objs) {
 		if(that == null) { System.out.print("インスタンス引数にthisがおすすめ。"); }
 		
-		System.out.print(print0());
+		System.out.print(cnt++ +" "+ print0());
 		for(int i=0; i < objs.length; i++) {
 			System.out.print("  " + objs[i]);
 		}

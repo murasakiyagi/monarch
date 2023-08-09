@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 //オリジナルパック
-import monarch.Unit;//
+import unit.Unit;//
 
 
 public class Staykun extends Statekun {

@@ -7,7 +7,7 @@ import javafx.geometry.Point2D;
 
 
 //オリジナルパック
-import monarch.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 import monarch.Scouter;
 import monarch.ScouterD;
 import monarch.FieldMasu;
@@ -58,7 +58,7 @@ public class Awaykun extends Statekun {
 				btlPd = work.getBtlPd();
 				slfPd = un.getPd();
 				nextAway();
-					if(un.teamNum() == 1) {
+					if(un.getTeam() == 1) {
 						//printArr("  AWAYLIST", awayList);
 					}
 			} else {
@@ -97,7 +97,7 @@ public class Awaykun extends Statekun {
 		@Override
 		protected void goaled(boolean boo) {//目的地についた後
 			work.nextProcess(boo);
-				//if(un.teamNum() == 1) { print("AWAY  GOAL", awyPd); }
+				//if(un.getTeam() == 1) { print("AWAY  GOAL", awyPd); }
 		}
 //susumukun--------------
 
@@ -115,8 +115,8 @@ public class Awaykun extends Statekun {
 			if( masukyori(pd) == 1 ) {//essenceで得られるpdは必ずslfの隣とは限らないので
 				ScouterD.littleAdd(awayList, slfPd, pd, 20);
 					awyPd = pd;
-					if(un.teamNum() == 1) {
-						System.out.println("TEAM  "+ un.teamNum() +" slfPd  "+ slfPd +" pd "+ pd );
+					if(un.getTeam() == 1) {
+						System.out.println("TEAM  "+ un.getTeam() +" slfPd  "+ slfPd +" pd "+ pd );
 						//System.out.println("MASUKYORI  " + masukyori(pd));
 					}
 				ok = true;
@@ -136,8 +136,8 @@ public class Awaykun extends Statekun {
 				list.add(key);
 			}
 		}
-					if(un.teamNum() == 1) {
-						//System.out.println("TEAM  "+ un.teamNum() +" val "+ val +" slfftcnt "+slfFtcnt);
+					if(un.getTeam() == 1) {
+						//System.out.println("TEAM  "+ un.getTeam() +" val "+ val +" slfftcnt "+slfFtcnt);
 						//printArr("  KEY LIST  ", list);
 					}
 		return list;

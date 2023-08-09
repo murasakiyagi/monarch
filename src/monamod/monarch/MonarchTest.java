@@ -28,10 +28,11 @@ import javafx.event.*;
 import javafx.scene.control.skin.*;
 
 //オリジナル
+import engine.QuickUtil;
 import pict.Img;
 import engine.P2Dcustom;//Point2Dcustom
 import engine.P2Dint;//Point2Dcustom
-import monarch.Unit;
+import unit.Unit;
 
 
 public class MonarchTest extends Application {
@@ -44,11 +45,10 @@ public class MonarchTest extends Application {
 	//一部はbutaiSetting()にある
 
 		Img img = new Img();
-		
+// 			String[] strs = img.getHakoUrls();
 		//マスセット
-		FieldMasu fl = new FieldMasu(img.getHakoUrls(), 350, 50, 64.0); //引数（箱の種類数, 起点XY, 箱のサイズ）
-
-		GameControler game = new GameControler(fl, p);
+		FieldManager fm = new FieldManager(10, 50);
+		GameControler game = new GameControler(fm, p);
 
 	//-----------------------------------
 
@@ -95,6 +95,21 @@ public class MonarchTest extends Application {
 	
 		//jikken.method()
 		private void jikken() {
+// 			List<Integer> jikkenList = new ArrayList<Integer>();
+// 			jikkenList.add(0);
+// 
+// 			Iterator ite = jikkenList.iterator();
+// 			
+// 			int jcnt = 0;
+// 			while(ite.hasNext()) {
+// 				print("JIKKEN 1", ite.next(), jikkenList.size());
+// 				ite.remove();
+// 				jikkenList.add(jcnt);
+// 				print("JIKKEN 2", jikkenList.size());
+// 				if(jcnt++ >= 100) {
+// 					break;
+// 				}
+// 			}
 
 		}
 		
@@ -117,16 +132,11 @@ public class MonarchTest extends Application {
 
 	
 	//------------------------------------------
-	private void print(Object... objs) {
-		System.out.print(print0());
-		for(int i=0; i < objs.length; i++) {
-			System.out.print(objs[i]);
-		}
-		System.out.println();
+	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
+	public void print(Object... objs) {
+		qu.print(objs);
 	}
-	private String print0() {
-		return "  !" + getClass().getSimpleName() + "!  ";
-	}
+
 
 	String reType(Object obj) {//型名を調べる
 		return obj.getClass().getSimpleName();

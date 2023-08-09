@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 //オリジナルパック
-import monarch.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 import task.TaskFace;
 
 public class Taskkun extends Statekun {

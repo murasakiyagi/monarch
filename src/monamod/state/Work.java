@@ -6,7 +6,7 @@ import java.util.*;
 import javafx.geometry.Point2D;
 
 
-import monarch.Unit;
+import unit.Unit;
 import task.TaskFace;
 import task.TaskManager;
 import monarch.Scouter;
@@ -30,7 +30,7 @@ public class Work {//実質UnitControler
 		public int testCnt = 0;
 	
 	
-	int process = 0;
+	int process;
 	Map<Integer, String> prosteMap = new HashMap<Integer, String>();
 
 	public Work(Unit un) {
@@ -39,9 +39,22 @@ public class Work {//実質UnitControler
 		this.stMn = new StateManager(un, this);
 		this.tskMana = new TaskManager(un, this);
 		settingMap();
-		setState("SCH");
+		objProcess();
 		stBf = state;
 	}
+
+// 	stManaとこちらのどちらに置こうか迷ったが、番号はこちらで使うのでこちら
+	private void settingMap() {
+		prosteMap.put(0, "SCH");
+		prosteMap.put(2, "SSM");
+		prosteMap.put(4, "TSK");
+		prosteMap.put(10, "AWY");
+		prosteMap.put(12, "STY");
+		prosteMap.put(14, "GRW");
+		prosteMap.put(16, "JOI");
+		prosteMap.put(20, "BTL");
+	}
+
 
 
 	public void working() {
@@ -51,17 +64,15 @@ public class Work {//実質UnitControler
 		state.run();//nextProcess()はここ
 	}
 	
-	
-		private void settingMap() {
-			prosteMap.put(0, "SCH");
-			prosteMap.put(2, "SSM");
-			prosteMap.put(4, "TSK");
-			prosteMap.put(10, "AWY");
-			prosteMap.put(12, "STY");
-			prosteMap.put(14, "BTL");
-			//prosteMap.put(, "");
+// 	working時点でun.hitP==0を感知できない場合もある
+	public void update() {
+		atoSimatu();
+	}
+
+		private void atoSimatu() {
+			StateFace kari = stMn.callState("JOI");
+			kari.reset();
 		}
-	
 	
 	int cnt = 0;
 	private void processor() {//工程管理者
@@ -72,27 +83,32 @@ public class Work {//実質UnitControler
 
 		if(process == 1) {//State=="SCH"であるが
 			if(stMn.isKeep()) {//元のStateとProcessに戻す。SCH.run()は実行されない。
-					//print("7  ", un.getName(), stMn.callName(state), process);
 				String kari = stMn.callName(stMn.reState());
 				setState(kari);
 				process = mapGetKey(kari);
 				stopStt = false;
-					//print("7  ", un.getName(), stMn.callName(state), process);
 			} else {
 			}
 		}
-
 	}
 	
 	
 	public void nextProcess(boolean next) {
 		if(next) { process += 1; }
-		if(!next) { process = 0; 
-			//if(un.whoName("HERO")) { print("5  nextProcess  ", stMn.keepName(), stMn.callName(state)); }
-			//print("5  nextProcess  ", stMn.keepName(), stMn.callName(state));
-		}
+		if(!next) { objProcess(); }
 	}
 	
+		private void objProcess() {
+			if(un.getObjNum() == 1) {
+				process = 0;
+				setState("SCH");
+			} else {
+				process = 14;
+				setState("GRW");
+			}
+		}
+
+
 	private Integer mapGetKey(String str) {//MapのvalueではなくKeyを求める
 		for(Integer key : prosteMap.keySet() ) {
 			if( prosteMap.get(key).equals(str) ) {
@@ -164,14 +180,15 @@ public class Work {//実質UnitControler
 
 //危険
 //tgtPd付近でcautionが起きると復帰時に不具合 -> un.setPdI()にroundをかけているからか。setPdIの修正はせず遠回りでやる
-	public void warning() { caution(14); }
+	public void join() { caution(16); }
+	public void warning() { caution(20); }
 	public void caution() { //caution(10); }
-}
+	}
 		private void caution(int prc) {
 			if(!stMn.isKeep()) { stMn.keepState(state); //}
 				//if(un.whoName("HERO")) { print("1  ", stMn.isKeep(), stMn.callName(state), prc); }
 				//print("1  ", stMn.isKeep(), stMn.callName(state), prc);
-				print("1 ", stMn.isKeep(), un.getTgtPd(), un.getPdD(), un.getPd(), un.getName());
+// 				print("1 ", stMn.isKeep(), un.getTgtPd(), un.getPdD(), un.getPd(), un.getName());
 			}
 			//state.reset();//末端class毎に違う
 			stopStt = true;
@@ -180,17 +197,10 @@ public class Work {//実質UnitControler
 
 
 //敵
-	public void setBtlUn(Unit btlUn) {
-		this.btlUn = btlUn;
-	}
-	
-	public Point2D getBtlPd() {
-		return btlUn.getPd();
-	}
-
-	public double getBtlHp() {
-		return btlUn.getHp();
-	}
+	public void setBtlUn(Unit btlUn) { this.btlUn = btlUn; }
+	public Unit getBtlUn() { return btlUn; }
+	public Point2D getBtlPd() { return btlUn.getPd(); }
+	public double getBtlHp() { return btlUn.getHp(); }
 
 	//--------------------------
 	protected void print(Object... objs) {

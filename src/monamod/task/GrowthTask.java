@@ -10,7 +10,7 @@ import engine.QuickUtil;
 import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 import state.Work;
 
-public class TestTask2 implements TaskFace {
+public class GrowthTask implements TaskFace {
 
 	protected String name;
 	protected Unit un;
@@ -18,23 +18,34 @@ public class TestTask2 implements TaskFace {
 	private int cnt = 0;
 
 	//コンストラクタ
-	public TestTask2() {}
-	public TestTask2(Unit un, Work work) {
+	public GrowthTask() {}
+	public GrowthTask(Unit un, Work work) {
 		this.un = un;
 		this.work = work;
-		this.name = "TSK2";
+		this.name = "GROWTH";
 	}
 
 	@Override
 	public void action() {
-		un.addHp(10);
-		System.out.println("TEST TASK 2");
+		grow();
+// 		System.out.println("GROWTH TASK");
 	}
 
 	@Override
 	public void setUnit(Unit un) {
 		this.un = un;
 	}
+	
+	private void grow() {
+		if(un.getHp() < 150) {
+			un.addHp(5);
+		} else {
+			un.create();
+			un.addHp(-100);
+		}
+	}
+	
+	
 	//------------------------------------------
 	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
 	protected void print(Object... objs) {

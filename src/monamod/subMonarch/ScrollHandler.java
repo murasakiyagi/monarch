@@ -1,4 +1,4 @@
-package monarch;
+package subMonarch;
 
 import java.io.*;
 import java.util.*;
@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.ScrollEvent;
 
 import event.HandlerFace;
+import monarch.GameControler;
 
 
 public class ScrollHandler implements HandlerFace<ScrollEvent> {

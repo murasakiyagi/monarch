@@ -56,6 +56,17 @@ public class FieldMasu {
 	//rowとcolumnの関係。row=y, column=x
 	static int flRow = field.length;	//行数。横並びが何個あるか
 	static int flCol = field[ field.length-1 ].length;	//列数。縦並びが何個あるか
+	static int kitenX;//マス群の描画起点。本当はdouble。XはFieldSizeによってはSceneからはみ出すのでauteField()内で式を組んでいる。だからコンストラクタで引数は必要ない
+	static int kitenY;//Yは任意
+
+	//Image と ImageViewの違いは、ファイルを読み込むクラスと、読み込んだデータを描画するクラス
+	Img img;
+	Image[] hakoImg;	//箱のイメージ
+	String[] hakoPath;	//hakoImgの画像のファイルネーム、パス
+	HakoView hakoView; //メソッド内でインスタンス
+	//Node hakoView;
+	static double hakoW, hakoH; //箱の大きさ
+	static double ajustW, ajustH;//微調整。箱の大きさとUnitの大きさ
 
 	int row = 0;//Field[row][col]
 	int col = 0;
@@ -76,17 +87,44 @@ public class FieldMasu {
 	int fs;//fstPds[fs]
 	//Point2D fstPd, sndPd, serPd, forPd;//キャラ初期位置。ここから進入できないマスは0にする
 
+
+	//ラストチェック
+	int masuTotal;//Fieldの全マスの数 flRow * flCol
+	int noAdmit;//立ち入り禁止のマス数 masuTotal - walkSet.size()
+	int flDivide;//分配。( flRow * flCol - (noAdmit + walkSet.size()) == 0 )
+	boolean checkPass = false;
+	
 	
 	//コンストラクタ=========================================
 
-	public FieldMasu() {
+	public FieldMasu() {}; //スーパークラスを(があれば)そのままインスタンスするやつ
+
+	public FieldMasu(String[] hakoPath, int x, int y, double hakosize) {
+
+		this.hakoPath = hakoPath;
+		img = new Img();
+		hakoImg = img.getHakoImages();
+/*		hakoImg = new Image[] {
+			new Image(img.getHakoUrls()[0]),
+			new Image(img.getHakoUrls()[1]),
+			new Image(img.getHakoUrls()[2])
+		};	//箱の種類数
+*/		flRow = field.length;	//行数。横線が何個あるか
+		flCol = field[0].length;	//列数。縦線が何個あるか
+		kitenX = x; //マスを並べるときの初めの座標。Xでありrowでない
+		kitenY = y; //Yでありcolでない
+		hakoW = hakosize;
+		ajustW = hakoW / 4;
+		ajustH = hakoW / 8;
 		this.ft = new FtcntMapping(this);
-	}; //スーパークラスを(があれば)そのままインスタンスするやつ
+	}
+
 
 
 	//=======================================================
 	//メインアクション---------
 	public void action() {
+			//print("FIELDMATH==================");
 		p.getChildren().clear();
 		vidcnt = 0;
 		lastCheck();
@@ -161,7 +199,7 @@ public class FieldMasu {
 			field = new int[ (int)(Math.random() * 6 + minimum) ][ (int)(Math.random() * 6 + minimum) ];//ランダム生成
 			flRow = field.length;	//行数。横線が何個あるか
 			flCol = field[0].length;	//列数。縦線が何個あるか
-// 			kitenX = (int)( flRow * hakoW/2 + 10 );//描画位置の調整
+			kitenX = (int)( flRow * hakoW/2 + 10 );//描画位置の調整
 	
 			makeBarrier();
 	
@@ -240,6 +278,7 @@ public class FieldMasu {
 				//その際、歩けるマスリストwalkSetに格納していく
 				//０マスによって孤立しないように
 				for(int j=0; j < fstPds.length; j++) {
+		
 					bkcnt = 0;
 					
 					//現在(sndPds == fstPds)である。
@@ -249,7 +288,9 @@ public class FieldMasu {
 					//sndPds[2] == fstPds[1]、となるように処理する
 					while(fstbo[j] == false) {//すべてtrueになるまで
 						bkcnt++;
+		
 						fstPds[j] = nextPos(fstPds[j]);
+		
 						//fstPdsの各POSが他のPOSまで行けるように
 						if(j == fstPds.length-1) {//fstPds[max]
 							if( sndPds[0].equals(fstPds[j]) ) {//sndPds[0].equals(fstPds[max])
@@ -260,33 +301,40 @@ public class FieldMasu {
 						} else {
 							fstbo[j] = false; 
 						}
-
+		
+		
 						if(bkcnt >= flRow * flCol * 50) {
 							print("SYOKIITI BREAK 2 ");
 							break; 
 						}//無限ループ防止保険。fstboが全てtrueでなければ別メソッドで繰り返される
 					}
+		
 				}
 			}
 
 
 	private Point2D nextPos(Point2D pd) {//syokiiti
 		//walkSet移動可能な場所のリストに加え、次の位置ポイントを返す
+		
 		int pr = (int)pd.getX();
 		int pc = (int)pd.getY();
 		int rdm1 = (int)(Math.random() * 3) - 1;//-1,0,1
 		int rdm2 = (int)(Math.random() * 3) - 1;
 
 		if(rdm1 != 0) {//row移動
+
 			if( field[ pr + rdm1 ][ pc ] >= 1 ) {//マスの属性が０でない
 				pd = pd.add(rdm1, 0);
 				walkSet.add(pd);
 			}
+
 		} else if(rdm2 != 0) {//col移動。rdm1が０である
+
 			if( field[ pr ][ pc + rdm2 ] >= 1 ) {
 				pd = pd.add(0, rdm2);
 				walkSet.add(pd);
 			}
+
 		}
 		return pd;//rdm1,rdm2共に０なら何も変化なしで引数のpdを返す
 	}
@@ -322,6 +370,102 @@ public class FieldMasu {
 
 
 
+//=============================================
+// オブザーバー
+// 	List<Monaserver> obsList = new ArrayList<Monaserver>();
+// 	public void registerObserver(Monaserver obs) {
+// 		obsList.add(obs);
+// 	};//オブザーバーリストに追加
+// 	public void removeObserver(Monaserver obs) {
+// 		obsList.remove(obs);
+// 	};//リストから削除
+// 	public void notifyObserver() {
+// 		for(Monaserver obs : obsList) {
+// 			obs.update();
+// 		}
+// 	};//変更通知
+
+
+// ======================
+	
+	//描画準備ーーーーーーーーーーーーーーーー
+
+// 	private void hakoire() {//action
+// 		//hakoPath[i]の内容（パス）はメインで一々設定する。
+// 			//例　fl.hakoPath[0] = "../img/karahako.png";
+// 
+// 		hakoW = hakoImg[0].getWidth();//箱のサイズは全部同じだからhakoImg[0]
+// 		hakoH = hakoImg[0].getHeight();
+// 			hakoW = 64.0;
+// 	}
+// 
+// 
+// 	//このメソッドはこちらでいい
+// 	private void coordChangeV(ImageView v, int i, int j) {//i row, j col
+// 		//少しずつずらしてならべる
+// 		v.setX( setX(i, j) );
+// 		v.setY( setY(i, j) );
+// 	}
+// 	private void coordChangeTx(Text v, int i, int j) {
+// 		//少しずつずらしてならべる
+// 		v.setX( setX(i, j) );
+// 		v.setY( setY(i, j) );
+// 	}
+// 	private void coordChange(Node v, int i, int j) {//i row, j col
+// 		v.setTranslateX( setX(i, j) );
+// 		v.setTranslateY( setY(i, j) );
+// 	}
+// 	
+// 		private double setX(int i, int j) {
+// 			return kitenX-( i *hakoW/2)+( j *hakoW/2);
+// 		}
+// 		private double setY(int i, int j) {
+// 			return kitenY+( j *hakoW/4)+( i *hakoW/4);
+// 		}
+// 		
+// 	//舞台のイメージと並び方を設定する
+// 	private void masuNarabe() {//action
+// 
+// 		//zeromasu();
+// 
+// 		for(int i=0; i < flRow; i++) {
+// 			for(int j=0; j < flCol; j++) {
+// 				hakoView = new HakoView();
+// 				hakoView.setId(""+0);//並び替えで使う
+// 				hakoView.setPos(i, j);
+// 				//hakoImgの半分ずれ、jが増えるごとに半分ずれる
+// 				coordChange(hakoView, i, j);
+// 
+// 
+// 				//行と列の番号振りだけhakoViewには関係ない
+// 				if(i == 0) {
+// 					Text tx = new Text(""+ (j-1));
+// 					tx.setId(""+0);
+// 					coordChange(tx, i, j);
+// 					p.getChildren().add(tx);
+// 					//field[0][j] = 0;//上端の行
+// 					//field[ flRow-1 ][j] = 0;//下端の行
+// 				} else if(j == 0) {
+// 					Text tx = new Text(""+ (i));
+// 					tx.setId(""+0);
+// 					coordChangeTx(tx, i, j);
+// 					p.getChildren().add(tx);
+// 				}
+// 
+// 
+// 				switch(field[i][j]) {
+// 					case 0: hakoView.setImage(hakoImg[0]); break;
+// 					case 1: hakoView.setImage(hakoImg[1]); break;
+// 					case 2: hakoView.setImage(hakoImg[2]); break;
+// 					default: break;
+// 				}
+// 				p.getChildren().add(hakoView);
+// 			}//forj,end
+// 		}//fori,end
+// 				print("kitenX  ", kitenX, kitenY);
+// 
+// 	}
+
 
 
 
@@ -347,6 +491,16 @@ public class FieldMasu {
 		qu.print(objs);
 	}
 	
+	private void print(Object obj, Object obj2) {
+		System.out.println("  FIELD MASU  " + obj + obj2);
+		System.out.println();
+	}
+
+	private void print(Object obj) {//Overrode
+		System.out.println("  FIELD MASU  " + obj);
+		System.out.println();
+	}
+
 
 	public void printArr(List arr, String str) {//汎用メソッド
 		for(int i=0; i < arr.size()-1; i++) {
@@ -363,6 +517,38 @@ public class FieldMasu {
 
 
 }
+	//==============================================	
+
+
+
+
+// //クリックイベント用にrow,colを追加
+// class HakoView extends ImageView {
+// 	int row;
+// 	int col;
+// 
+// 	public HakoView() {}
+// 
+// 	public HakoView(Image image) {//Imageを指定
+// 		setImage( image );
+// 	}
+// 
+// 	public HakoView(String path) {//Imageのpathだけ指定
+// 		setImage( new Image(new File( path ).toURI().toString()) );
+// 	}
+// 
+// 	//---------------------------------
+// 
+// 	protected void setPos(int i, int j) {//
+// 		row = i;
+// 		col = j;
+// 	}
+// 
+// }//class.end
+
+
+
+
 
 
 

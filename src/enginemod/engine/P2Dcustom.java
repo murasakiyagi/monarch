@@ -84,6 +84,25 @@ public class P2Dcustom extends Point2D {
 		this.add(x,y);
 	}
 	
+	
+
+		static public Point2D neswNum(int num, int scale) {
+			Point2D pd = Point2D.ZERO;
+			int p = 1 * scale;
+			int m = -1 * scale;
+			if(num == 0) { pd = pd.add(0, m); }//n↑
+			if(num == 1) { pd = pd.add(p, 0); }//e→
+			if(num == 2) { pd = pd.add(0, p); }//s↓
+			if(num == 3) { pd = pd.add(m, 0); }//w←
+			if(num == 4) { pd = pd.add(p, m); }//ne
+			if(num == 5) { pd = pd.add(p, p); }//es
+			if(num == 6) { pd = pd.add(m, p); }//sw
+			if(num == 7) { pd = pd.add(m, m); }//wn
+			return pd;
+		}
+	
+	
+	
 /*	super.classのメソッド
 	注意：addなどは（pd = pd.add(x,y)）で変更する
 

@@ -27,11 +27,18 @@ import javafx.event.*;
 //オリジナル
 import engine.QuickUtil;
 import engine.P2Dint;
-
+import unit.Unit;
 
 //斜めマス配置。ｉとｊを入れ替えで逆に。
 //rectの色柄で配置の確認が取れる
 //Mijikai6からippo部分を変更
+
+
+// guide呼び出し頻度がすこぶる高いのでなんとかする
+// ftcntMappingはよしとする
+
+
+
 
 public class Scouter {
 
@@ -217,13 +224,13 @@ public class Scouter {
 	//追いかける
 	//オーバーロード
 	public List<Point2D> guide(Unit un) {
-		int myR = un.row;		int myC = un.col;
-		int tgtR = x(un.tgtPd);	int tgtC = y(un.tgtPd);
+		int myR = un.getRow();		int myC = un.getCol();
+		int tgtR = x(un.getTgtPd());	int tgtC = y(un.getTgtPd());
 		return guide( p2d(myR, myC), p2d(tgtR, tgtC) );
 	}
 
 	public List<Point2D> guide(Unit un, Point2D pd) {
-		int myR = un.row;		int myC = un.col;
+		int myR = un.getRow();		int myC = un.getCol();
 		int tgtR = x(pd);	int tgtC = y(pd);
 		return guide( p2d(myR, myC), p2d(tgtR, tgtC) );
 	}
@@ -235,6 +242,7 @@ public class Scouter {
 
 	boolean through = false;//スルー
 	public List<Point2D> guide(P2Dint herePd, P2Dint therPd) {
+// 			print("SCOUTER");
 
 		
 		//自分の場所から敵などの場所
@@ -369,7 +377,7 @@ public class Scouter {
 				stopRansu[stopcnt++] = ransu; 
 			}
 		} catch(NullPointerException ne) {
-			ne.getStackTrace();
+			System.out.println(ne.getStackTrace());
 				print("-------IPPO NULL EXCEPTION---------");
 		}
 	}
@@ -550,20 +558,25 @@ public class Scouter {
 
 //--------------------------------------
 
-	void print(Object obj, Object obj2, Object obj3) {
-		System.out.println("  MIJI  " + obj +" "+ obj2 +" "+ obj3);
-		System.out.println();
-	}
-	
-	void print(Object obj, Object obj2) {
-		System.out.println("  MIJI  " + obj +" "+ obj2);
-		System.out.println();
+	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
+	public void print(Object... objs) {
+		qu.print(objs);
 	}
 
-	void print(Object obj) {//Overrode
-		System.out.println("  MIJI  " + obj);
-		System.out.println();
-	}
+// 	void print(Object obj, Object obj2, Object obj3) {
+// 		System.out.println("  MIJI  " + obj +" "+ obj2 +" "+ obj3);
+// 		System.out.println();
+// 	}
+// 	
+// 	void print(Object obj, Object obj2) {
+// 		System.out.println("  MIJI  " + obj +" "+ obj2);
+// 		System.out.println();
+// 	}
+// 
+// 	void print(Object obj) {//Overrode
+// 		System.out.println("  MIJI  " + obj);
+// 		System.out.println();
+// 	}
 
 	private void printArr(Object str, List<?> arr) {//汎用メソッド
 		for(Object obj : arr) {

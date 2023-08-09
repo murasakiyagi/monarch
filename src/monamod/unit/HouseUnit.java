@@ -1,4 +1,4 @@
-package monarch;
+package unit;
 
 import java.io.*;
 import java.util.*;
@@ -21,9 +21,10 @@ import javafx.util.*;
 
 //オリジナル
 import pict.Img;
+import monarch.FieldMasu;
 
 
-public class HumanUnit extends Unit {
+public class HouseUnit extends Unit {
 
 	protected char houkou;
 	private boolean haveJob = false;
@@ -31,8 +32,8 @@ public class HumanUnit extends Unit {
 
 	//=============================================
 	//コンストラクタ
-	public HumanUnit(double hitP, int team, int imgNum, FieldMasu fl, UnitManager manager) {
-		super(hitP, team, imgNum, fl, manager);
+	public HouseUnit(double hitP, int team, int imgNum, UnitManager mana) {
+		super(hitP, team, imgNum, 2, mana);
 	}
 
 
@@ -53,8 +54,12 @@ public class HumanUnit extends Unit {
 		}
 
 		public void create() {
-			UnitCreater uc = new UnitCreater(this.manager);
-			Unit un = uc.humanCreate((int)this.hitP, this.team, this.imgNum, this.fl);
+			UnitCreater uc = new UnitCreater(this.mana);
+			Unit un = uc.humanCreate(100, this.team, this.imgNum);
+			un.setPdP(this.row, this.col);
+// 				print("THIS PD ",this.row, this.col);
+// 				print("UN PD ", un.getPd());
+// 			発生場所の調整がUnitになるので、デザイン的に懸念
 		}
 
 
@@ -67,17 +72,7 @@ public class HumanUnit extends Unit {
 
 
 	//=================================-
-/*	private void print(Object... objs) {
-		System.out.print(print0());
-		for(int i=0; i < objs.length; i++) {
-			System.out.print("  " + objs[i]);
-		}
-		System.out.println();
-	}
-	private String print0() {
-		return "  !" + getClass().getSimpleName() + "!  ";
-	}
-*/
+
 	private void printArr(String str, ArrayList<?> arr) {
 		for(Object obj : arr) {
 			print(str, obj);

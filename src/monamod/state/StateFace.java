@@ -3,8 +3,8 @@ package state;
 import java.io.*;
 import java.util.*;
 
-import monarch.Unit;
-import monarch.HumanUnit;
+import unit.Unit;
+import unit.HumanUnit;
 
 public interface StateFace {
 	
