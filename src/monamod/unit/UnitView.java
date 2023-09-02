@@ -14,9 +14,9 @@ import javafx.geometry.Rectangle2D;
 //オリジナル
 import engine.QuickUtil;
 import pict.Img;
-import monarch.FieldMasu;
-import monarch.FieldView;
-import monarch.FieldManager;
+import field.FieldMasu;
+import field.FieldView;
+import field.FieldManager;
 import monarch.Monaserver;
 import monarch.MonaDisplay;
 
@@ -126,16 +126,21 @@ public class UnitView extends ImageView implements Monaserver, MonaDisplay {
 		hpTx.setY( this.getY() );
 	}
 	
-	
+	@Override
 	public void display() {
 		//mainPane.getChildren().addAll(paneList);
 	}
-	
+
+
 	public int getObjNum() { return un.getObjNum(); }
 	public ImageView getView() { return view; }
 // 	public UnitView getView() { return this; }
 	public Text getTx() { return hpTx; }
 	public Unit getUnit() { return un; }
+	public void showData() {
+		print(this.getId(), un.getRow(), un.getCol(), Math.round(un.getHp()) );
+		print( un.getTgtPd(), un.getBtlUn());
+	}
 
 	
 	QuickUtil qu = new QuickUtil(this);

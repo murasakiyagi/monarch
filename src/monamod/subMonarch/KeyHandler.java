@@ -38,4 +38,5 @@ public class KeyHandler implements HandlerFace<KeyEvent> {
 	}
 	public void handle3(KeyEvent e) {}//null
 	public void handle4(KeyEvent e) {}//null
+	public void handle5(KeyEvent e) {}//null
 }

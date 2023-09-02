@@ -17,23 +17,23 @@ public class P2Dcustom extends Point2D {
 	
 	//Point2DはStringと同様、イミュータブルの様で(セッターが無い)、
 	//データ隠蔽がされている様で、、、newを使わざるを得ない。
-	static public P2Dcustom cast(Point2D pd) {
+	public static P2Dcustom cast(Point2D pd) {
 		return new P2Dcustom(pd);
 	}
 	
 	
 
-	static public int intX(Point2D pd) {
+	public static int intX(Point2D pd) {
 		return (int)Math.round(pd.getX());
 	}
-	static public int intY(Point2D pd) {
+	public static int intY(Point2D pd) {
 		return (int)Math.round(pd.getY());
 	}
 	
-	static public double x(Point2D pd) {
+	public static double x(Point2D pd) {
 		return pd.getX();
 	}
-	static public double y(Point2D pd) {
+	public static double y(Point2D pd) {
 		return pd.getY();
 	}
 	
@@ -85,8 +85,8 @@ public class P2Dcustom extends Point2D {
 	}
 	
 	
-
-		static public Point2D neswNum(int num, int scale) {
+// 		戻り値をaddする
+		public static Point2D neswNum(int num, int scale) {
 			Point2D pd = Point2D.ZERO;
 			int p = 1 * scale;
 			int m = -1 * scale;
@@ -100,8 +100,49 @@ public class P2Dcustom extends Point2D {
 			if(num == 7) { pd = pd.add(m, m); }//wn
 			return pd;
 		}
+// 		7 0 4
+// 		3 * 1
+// 		6 2 5
+
+
+	public static boolean isNext(Point2D pd, Point2D tgtPd) {
+		boolean boo = false;
+		for(int i = 0; i < 4; i++) {
+			boo = tgtPd.equals( pd.add(neswNum(i, 1)) );
+			if(boo) { break; }
+		}
+		return boo;
+	}
+
+	//壁無視
+	public static double kyori(Point2D pd, Point2D tgtPd) {
+		double dis = pd.distance(tgtPd);//ピタゴラス
+		double pow = Math.pow(dis, 2);//a^2 + b^2 = c^2 = dis
+		double sqrt = Math.sqrt(pow-1);//(a==1)a^2=1,
+		return Math.round(sqrt + 1);
+	}
+
+		public static int kyoriInt(Point2D pd, Point2D tgtPd) {
+			return (int)kyori(pd, tgtPd);
+		}
 	
 	
+		//jikken.method()
+		private void jikken() {
+			Point2D pda = Point2D.ZERO;
+			Point2D pdb = new Point2D(1,2);
+			double dis = pda.distance(pdb);//ピタゴラス
+			double pow = Math.pow(dis, 2);//a^2 + b^2 = c^2 = dis
+			double sqrt = Math.sqrt(pow-1);//(a==1)a^2=1, 
+			print("JIKKEN ", dis, pow, sqrt+1);
+		}
+
+
+
+	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
+	public void print(Object... objs) {
+		qu.print(objs);
+	}
 	
 /*	super.classのメソッド
 	注意：addなどは（pd = pd.add(x,y)）で変更する

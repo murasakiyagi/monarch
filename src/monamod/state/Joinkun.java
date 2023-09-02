@@ -32,6 +32,7 @@ public class Joinkun extends Statekun {
 
 	@Override
 	protected void goaled(boolean boo) {//目的地についた後
+// 			print("JOIN");
 		kphpMap.remove(un);
 		super.goaled(boo);
 	}

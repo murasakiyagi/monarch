@@ -8,8 +8,8 @@ import javafx.geometry.Point2D;
 //オリジナルパック
 import unit.Unit;//
 import unit.Houkou;
-import monarch.Scouter;
-import monarch.ScouterD;
+import field.Scouter;
+import field.ScouterD;
 import engine.P2Dcustom;//Point2Dcustom
 
 
@@ -99,9 +99,9 @@ public class Susumukun extends Statekun {
 			goaled(false);//目的地に着いたら
 		} else 
 		
-		//これでもいい -> if(walkListD.size()-1 == progCnt) {
+// 		これでもいい -> if(walkListD.size()-1 == progCnt) {
 //		if( un.getTgtPd().equals( un.getPdD() ) ) {//tgtPdに到着
-		if(prePd(un.getTgtPd(), un.getPdD())) {
+		if( P2Dcustom.isNext( un.getTgtPd(), un.getPdD() ) ) {
 			goaled(true);//目的地に着いたら
 		} else if(walkListD.size() > progCnt) {//進行中
 			inching(1);
@@ -121,7 +121,7 @@ public class Susumukun extends Statekun {
 			Houkou houkou = new Houkou();
 			private void houkou() {
 				try {
-					if(progCnt % 20 == 0) {
+					if(progCnt % deno == 0) {
 						un.setHoukou(
 							houkou.houkou( walkListD.get(progCnt + 1), walkListD.get(progCnt) ) 
 						);
@@ -144,17 +144,8 @@ public class Susumukun extends Statekun {
 			work.nextProcess(boo);
 		}
 
-			private boolean prePd(Point2D tgtPd, Point2D nowPd) {//tgtPd一歩手前
-				boolean kari = false;
-				if( tgtPd.add(1, 0).equals(nowPd) ) { kari = true; };
-				if( tgtPd.add(-1, 0).equals(nowPd) ) { kari = true; };
-				if( tgtPd.add(0, 1).equals(nowPd) ) { kari = true; };
-				if( tgtPd.add(0, -1).equals(nowPd) ) { kari = true; };
-				return kari;
-			}
 
-
-	private void ajust() {
+	private void ajust() {//使ってない
 		if(!un.eqlPd(un.getPdD())) {
 			if( walkDNZ() ) {
 				walkListD = ScouterD.inchStep(un.getPdD(), un.getPd(), deno - keepCnt);

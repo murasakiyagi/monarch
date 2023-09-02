@@ -1,4 +1,4 @@
-package monarch;
+package field;
 
 import java.io.*;
 import java.util.*;
@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 
 
 import engine.QuickUtil;
+import monarch.ManagerFace;
 
 /* has a
 MonarchTest
@@ -16,8 +17,9 @@ GameControler
 */ 
 
 // Fieldの状態を管理
-public class FieldManager {
+public class FieldManager implements ManagerFace {
 
+	ManagerFace chief;
 	FieldMasu fl;
 	FieldView fv;
 	FtcntMapping ft;
@@ -26,7 +28,7 @@ public class FieldManager {
 // 	調整管理用
 	static Set<Point2D> resvSet = new HashSet<Point2D>();
 
-	public FieldManager(int x, int y) {
+	public FieldManager(int x, int y, ManagerFace chief) {
 		this.fl = new FieldMasu();;
 // 		this.fl = new FieldMasu(y, hakosize);;
 		fv = new FieldView(fl, 10, 50);
@@ -91,6 +93,13 @@ public class FieldManager {
 	public void rsvClear() {
 		resvSet.clear();
 	}
+
+
+	public void register(ManagerFace mf) {};
+	public void remove(ManagerFace mf) {};
+	public void update() {};
+	public void notifyMana() {};
+
 
 	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
 	public void print(Object... objs) {

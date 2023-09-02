@@ -2,6 +2,7 @@ package monarch;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.*;
 //import java.awt.Font;
 
 
@@ -27,29 +28,34 @@ import javafx.collections.transformation.*;
 import javafx.event.*;
 import javafx.scene.control.skin.*;
 
+	import javafx.beans.value.ChangeListener;
+	import javafx.beans.property.ReadOnlyDoubleProperty;
+	import javafx.beans.property.DoubleProperty;
+
+
 //オリジナル
 import engine.QuickUtil;
-import pict.Img;
+import engine.Panes;
+import engine.PanesSupport;
 import engine.P2Dcustom;//Point2Dcustom
 import engine.P2Dint;//Point2Dcustom
+import pict.Img;
 import unit.Unit;
+import field.FieldManager;
 
 
 public class MonarchTest extends Application {
 
-	static Pane p = new Pane();
 	Scene scene;
-
 
 	//オリジナルクラス-------------------
 	//一部はbutaiSetting()にある
-
-		Img img = new Img();
-// 			String[] strs = img.getHakoUrls();
-		//マスセット
-		FieldManager fm = new FieldManager(10, 50);
-		GameControler game = new GameControler(fm, p);
-
+		SetOnMona som;
+		ChiefManager chief = new ChiefManager(10, 50);
+		GameControler game = new GameControler(chief);
+		Panes ps = new Panes(game.getPane(), 500, 300);
+		PanesSupport sup = new PanesSupMona(ps);
+		Camera camera = new PerspectiveCamera();
 	//-----------------------------------
 
 	//実験用
@@ -63,12 +69,14 @@ public class MonarchTest extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
-		scene = new Scene(p, 700, 500);
+		scene = new Scene(ps.getBp(), 700, 500);
+// 		scene.setCamera(camera);
+			ps.setSubCamera(camera);
 		stage.setScene(scene);
 		stage.show();
 
-
-		SetOnMona som = new SetOnMona(scene, game);
+		
+		som = new SetOnMona(scene, game, camera);
 		
 		
 			//jikken==================
@@ -79,6 +87,11 @@ public class MonarchTest extends Application {
 			print("10^0 ",2^2);//^と~は比較演算子で累乗演算子では無いです
 			print(Math.pow(3,2), Math.pow(2,3));
 			print(Math.round(1.5), Math.round(1.4));
+			crePro2();
+			crePro();
+// 			リードオンリーのため、バインドできません
+// 			scene.widthProperty().bind(ps.getSubsn().widthProperty());
+			scene.widthProperty().addListener(new ChangeLisn());
 			//jikken.end===============
 
 
@@ -95,22 +108,7 @@ public class MonarchTest extends Application {
 	
 		//jikken.method()
 		private void jikken() {
-// 			List<Integer> jikkenList = new ArrayList<Integer>();
-// 			jikkenList.add(0);
-// 
-// 			Iterator ite = jikkenList.iterator();
-// 			
-// 			int jcnt = 0;
-// 			while(ite.hasNext()) {
-// 				print("JIKKEN 1", ite.next(), jikkenList.size());
-// 				ite.remove();
-// 				jikkenList.add(jcnt);
-// 				print("JIKKEN 2", jikkenList.size());
-// 				if(jcnt++ >= 100) {
-// 					break;
-// 				}
-// 			}
-
+			
 		}
 		
 
@@ -156,10 +154,40 @@ public class MonarchTest extends Application {
 	}
 
 
+// 新しくdoublePropertyなどを作りたい場合
+		private void crePro2() {
+			print("crePro");
+		}
+
+		private void crePro() {
+			double d = 0;
+			DoubleProperty dp = new DoubleProperty();
+			dp.setValue(d);
+			ReadOnlyDoubleProperty rodp = (ReadOnlyDoubleProperty)dp.readOnlyDoubleProperty();
+			print("crePro", dp, rodp);
+		}
+
+class ChangeLisn implements ChangeListener<Number> {
+	@Override
+	public void changed(
+		ObservableValue<? extends Number> observable,
+		Number oldValue,
+		Number newValue
+	) {
+
+		Supplier<Double> s1 = ps.getSubsn()::getWidth;//戻り値
+			print("S1", s1.get());
+		double sd = s1.get();
+		print("ChangeLisn OLD", oldValue, "NEW", newValue);
+		ps.getSubsn().setWidth(sd + ((double)newValue - (double)oldValue));
+		print("ChangeLisn OLD", s1.get());
+	}
+	
+
+}
 
 
 }//class,end
-
 
 
 

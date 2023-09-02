@@ -6,9 +6,10 @@ import java.util.*;
 import javafx.geometry.Point2D;
 
 import engine.QuickUtil;
-import monarch.Scouter;
-import monarch.FieldManager;
-import monarch.FtcntMapping;
+import engine.P2Dcustom;
+import field.Scouter;
+import field.FieldManager;
+import field.FtcntMapping;
 import monarch.Monaserver;
 
 
@@ -22,13 +23,11 @@ public class ContextGrasp {
 	boolean buttle, away, keep;
 	Map<Unit, Integer> unitMap;
 	
-	Scouter scout;
 	FieldManager fm;
 	FtcntMapping ft;
 
 	public ContextGrasp(UnitManager mana) {
 		this.unitMap = mana.getUnitMap();
-		this.scout = new Scouter();//FieldMasuに持たせたい。
 		this.fm = mana.getFm();
 		this.ft = fm.getFt();
 	}
@@ -38,7 +37,7 @@ public class ContextGrasp {
 		if( !un.equals(un2) ) {
 			setUnit(un, un2);
 			int kari = checkContext();
-			if(kari == 3) {
+			if(kari == 3) {//Join
 				setUrgency(un, un2, 3);
 				setUrgency(un2, un, 3);
 			} else if( kari == 2 ) {//warningは互いが戦闘体制
@@ -53,7 +52,6 @@ public class ContextGrasp {
 			if((un.getHp() > 10) & (un2.getHp() > 10)) {
 				setUrgency(un, un2, 2);
 				setUrgency(un2, un, 2);
-					//System.out.println(un.getHp() +" "+ un2.getHp() );
 			}
 		}
 
@@ -106,7 +104,19 @@ public class ContextGrasp {
 
 
 
-
+// 	ftcntでの距離と、壁無視の絶対距離の両方を見る
+	double dist;//walkList.size()
+	private boolean isNear(double kyori) {
+		dist = P2Dcustom.kyori(un.getPd(), un2.getPd());//直線距離なのでだめ
+// 		dist = ft.ftKyori(un.getPd(), un2.getPd());
+		if(dist <= kyori) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
 	boolean isStrong() {//強い？
 		return ( un2.getHp() - un.getHp() ) >= 10;
 	}
@@ -126,21 +136,7 @@ public class ContextGrasp {
 		}
 	
 	
-	int sctCnt;//walkList.size()
-	private boolean isNear(double kyori) {
-		List<Point2D> list = new ArrayList<Point2D>();
-// 		list = scout.guide(un.getPd(), un2.getPd());
-// 		sctCnt = list.size();
-		sctCnt = ft.ftKyori(un.getPd(), un2.getPd());
-		if(sctCnt <= kyori) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
-	
-
 	boolean isBlock() {//進行方向の妨げ？
 		return false;
 	}
@@ -152,17 +148,5 @@ public class ContextGrasp {
 		qu.print(objs);
 	}
 	
-/*	public void checkContext(Unit un, Unit un2) {
-		if( !isHuman(un) ) { return; }//
-		if( !isNear(un, un2) ) { return; }
-		if( !isEnemy(un, un2) ) { return; }
-		if( !isHuman(un2) ) {
-			return;
-		} else {
-			un.setState(un.btlkn);
-		}
-		//if( isStrong(un, un2) ) {  }
-	}
-*/
 
 }

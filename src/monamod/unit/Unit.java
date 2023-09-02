@@ -26,12 +26,12 @@ import state.StateFace;
 import state.Work;
 import task.TaskFace;
 import monarch.Monaserver;
-import monarch.FieldMasu;
+import field.FieldMasu;
 
 
 public abstract class Unit implements Cloneable {
 
-	static public Pane pane;
+	public static Pane pane;
 
 	//---------------------------------------------
 	//パラメータ
@@ -221,6 +221,7 @@ public abstract class Unit implements Cloneable {
 	public Work getWork() { return work; }
 
 	public void setBtlUn(Unit btlUn) { work.setBtlUn(btlUn); }
+	public Unit getBtlUn() { return work.getBtlUn(); }
 
 	public void warning() {
 		if(hitP > 10) { work.warning(); }

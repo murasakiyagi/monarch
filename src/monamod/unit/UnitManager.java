@@ -21,9 +21,10 @@ import javafx.util.*;
 
 
 import engine.QuickUtil;
-import monarch.FieldMasu;
-import monarch.FieldManager;
-import monarch.Paneler;
+import monarch.ManagerFace;
+import field.FieldMasu;
+import field.FieldManager;
+import field.Paneler;
 
 /*has a
 GameControler
@@ -32,7 +33,9 @@ GameControler
 
 //Unitの情報管理クラス
 
-public class UnitManager {
+public class UnitManager implements ManagerFace {
+
+	ManagerFace chief;//型をfaceにするか、実装にするか
 
 	static Pane paneIe = new Pane();
 	static Pane paneMan = new Pane();
@@ -52,6 +55,7 @@ public class UnitManager {
 	
 	Map<Unit, Integer> unitMap = new HashMap<Unit, Integer>();
 
+	private long idNum = 0;
 
 	//オリジナルクラス
 	//Unit.classはここで生成。このクラスがメインとUnitとの仲介
@@ -62,7 +66,7 @@ public class UnitManager {
 
 
 	//コンストラクタ
-	public UnitManager(FieldManager fm) {
+	public UnitManager(FieldManager fm, ManagerFace chief) {
 		this.fm = fm;
 		this.fl = fm.getFl();
 		unitList = new ArrayList<Unit>();
@@ -73,10 +77,16 @@ public class UnitManager {
 		//this.unitB = new HumanUnit(2,1,100,2,7,fl);
 		contextGrasp = new ContextGrasp(this);
 			uc = new UnitCreater(this);
+			paneTransparent();
 	}
 
 
-
+	private static void paneTransparent() {
+		pane.setMouseTransparent(false);
+		paneIe.setMouseTransparent(false);
+		paneMan.setMouseTransparent(false);
+		paneTxt.setMouseTransparent(true);
+	}
 
 	//アクション。メインに乗せる
 	public void action() {
@@ -131,10 +141,10 @@ public class UnitManager {
 	//初期設定
 	public void setting() {
 		zenkesi();
-		Unit unitA = uc.humanCreate(100,1,6);
+		Unit unitA = uc.humanCreate(200,1,6);
 			unitA.setName("HERO");
 			unitA.origInit();
-		Unit unitB = uc.humanCreate(500,2,8);
+		Unit unitB = uc.humanCreate(300,2,8);
 			unitB.setName("TEKI");
 		Unit houseA = uc.houseCreate(100,1,9);
 		fm.rsvClear();
@@ -154,7 +164,9 @@ public class UnitManager {
 		unitList.clear();
 		manViewList.clear();
 		ieViewList.clear();
+		txtViewList.clear();
 		unitMap.clear();
+		idNum = 0;
 	}
 
 // 		テスト-------------------------
@@ -212,6 +224,7 @@ public class UnitManager {
 	}
 
 	public void registerView(UnitView view) {
+		view.setId("" + idNum++);
 		if(view.getObjNum() == 1) {
 			manViewList.add(view);
 // 			manViewList.add(view.getTx());
@@ -310,6 +323,16 @@ public class UnitManager {
 	public Map<Unit, Integer> getUnitMap() { return unitMap; }
 	public List<UnitView> getManViewList() { return manViewList; }
 	public List<UnitView> getIeViewListSize() { return ieViewList; }
+
+
+
+	@Override
+	public void register(ManagerFace mf) {};
+	public void remove(ManagerFace mf) {};
+	public void update() {};
+	public void notifyMana() {};
+
+
 
 
 	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫

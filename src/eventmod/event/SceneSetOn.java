@@ -7,6 +7,7 @@ import javafx.scene.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.event.*;
+import javafx.scene.Camera;
 
 import event.Keys;
 
@@ -44,6 +45,7 @@ public abstract class SceneSetOn implements SetOnFace {
 		scene.setOnMouseReleased(e -> mouseHand.handle2(e));
 		scene.setOnMouseClicked(e -> mouseHand.handle3(e));
 		scene.setOnMouseDragged(e -> mouseHand.handle4(e));
+		scene.setOnMouseEntered(e -> mouseHand.handle5(e));
 		scene.setOnScroll(e -> scrollHand.handle(e));
 	}
 
@@ -62,23 +64,27 @@ public abstract class SceneSetOn implements SetOnFace {
 	}
 
 	public void mouseD(MouseEvent e) {
-		System.out.println("KEYTEST  RELEASE");
+		System.out.println("MOUSETEST  DRAGG");
 	}
 	
 	public void mouseC(MouseEvent e) {
-		System.out.println("KEYTEST  RELEASE");
+		System.out.println("MOUSETEST  CLICK");
 	}
 	
 	public void mouseP(MouseEvent e) {
-		System.out.println("KEYTEST  RELEASE");
+		System.out.println("MOUSETEST  PRESS");
 	}
 	
 	public void mouseR(MouseEvent e) {
-		System.out.println("KEYTEST  RELEASE");
-	}	
+		System.out.println("MOUSETEST  RELEASE");
+	}
 	
+	public void mouseE(MouseEvent e) {
+		System.out.println("MOUSETEST  ENTER");
+	}
+
 	public void scroll(ScrollEvent e) {
-		System.out.println("KEYTEST  RELEASE");
+		System.out.println("SCROLLTEST  SCROLL");
 	}
 
 

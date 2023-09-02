@@ -9,7 +9,7 @@ import javafx.geometry.Point2D;
 import unit.Unit;
 import task.TaskFace;
 import task.TaskManager;
-import monarch.Scouter;
+import field.Scouter;
 import monarch.Mcon;
 
 public class Work {//実質UnitControler
@@ -138,7 +138,7 @@ public class Work {//実質UnitControler
 	}
 
 
-//スタック監視
+//スタック(立ち止まり)監視
 	int watchCnt = 0;
 	int stackCnt = 0;
 	Point2D pdBf = new Point2D(0,0);
@@ -182,15 +182,13 @@ public class Work {//実質UnitControler
 //tgtPd付近でcautionが起きると復帰時に不具合 -> un.setPdI()にroundをかけているからか。setPdIの修正はせず遠回りでやる
 	public void join() { caution(16); }
 	public void warning() { caution(20); }
-	public void caution() { //caution(10); }
-	}
+	public void caution() { /*caution(10);*/ }
+
 		private void caution(int prc) {
-			if(!stMn.isKeep()) { stMn.keepState(state); //}
+			if(!stMn.isKeep()) {
+				stMn.keepState(state);
 				//if(un.whoName("HERO")) { print("1  ", stMn.isKeep(), stMn.callName(state), prc); }
-				//print("1  ", stMn.isKeep(), stMn.callName(state), prc);
-// 				print("1 ", stMn.isKeep(), un.getTgtPd(), un.getPdD(), un.getPd(), un.getName());
 			}
-			//state.reset();//末端class毎に違う
 			stopStt = true;
 			process = prc;
 		}

@@ -1,4 +1,4 @@
-package monarch;
+package field;
 
 import java.io.*;
 import java.util.*;
@@ -13,6 +13,10 @@ import javafx.geometry.Point2D;
 import engine.QuickUtil;
 import pict.Img;
 
+/*has a
+MouseHandler
+
+*/
 
 public class FieldView {
 
@@ -51,6 +55,7 @@ public class FieldView {
 	//描画準備ーーーーーーーーーーーーーーーー
 	private void regulation() {
 		p.getChildren().clear();
+		p.setMouseTransparent(false);
 		kitenX = (int)( fl.getRow() * hakoW/2 + kisoX );//描画位置の調整
 		this.kitenY = kitenY;
 // 		this.kitenY = fl.getKitenY();
@@ -60,9 +65,6 @@ public class FieldView {
 	
 
 	private void hakoire() {//action
-		//hakoPath[i]の内容（パス）はメインで一々設定する。
-			//例　fl.hakoPath[0] = "../img/karahako.png";
-
 		hakoW = hakoImg[0].getWidth();//箱のサイズは全部同じだからhakoImg[0]
 		hakoH = hakoImg[0].getHeight();
 			hakoW = 64.0;
@@ -92,7 +94,10 @@ public class FieldView {
 			return kitenY + ( j * hakoW/4 )+( i *hakoW/4 );
 		}
 		
-		private Point2D reCoord(double x, double y) {
+			private double x(Point2D pd) { return pd.getX(); }
+			private double y(Point2D pd) { return pd.getY(); }
+		
+		public Point2D reCoord(double x, double y) {
 /*
 			if(x == 0 && y == 0) { i+j==0 }
 			if(x == 0 && y > 0) { i+j > 0; i == j }(i+j)%2==0
@@ -111,7 +116,10 @@ public class FieldView {
 			return (new Point2D(rex, rey));
 		}
 
-
+		public Point2D reCoord(Point2D pd) {
+			return reCoord(x(pd), y(pd));
+		}
+		
 		
 	//舞台のイメージと並び方を設定する
 	public void masuNarabe() {//action

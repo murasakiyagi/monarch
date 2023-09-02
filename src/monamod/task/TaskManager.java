@@ -3,11 +3,13 @@ package task;
 import java.io.*;
 import java.util.*;
 
+import engine.QuickUtil;
+import monarch.ManagerFace;
 import unit.Unit;
 import state.Work;
 
 
-public class TaskManager {
+public class TaskManager implements ManagerFace {
 
 	Unit un;
 	Work work;
@@ -25,5 +27,17 @@ public class TaskManager {
 		return taskMap.get(name);
 	}
 
+
+	@Override
+	public void register(ManagerFace mf) {};
+	public void remove(ManagerFace mf) {};
+	public void update() {};
+	public void notifyMana() {};
+	
+	
+	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
+	protected void print(Object... objs) {
+		qu.print(objs);
+	}
 
 }

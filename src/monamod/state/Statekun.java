@@ -6,6 +6,7 @@ import java.util.*;
 //オリジナルパック
 import engine.QuickUtil;
 import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
+import unit.Houkou;
 
 
 public class Statekun implements StateFace {

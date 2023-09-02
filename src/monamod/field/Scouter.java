@@ -1,7 +1,7 @@
 //自動追尾、最短距離アルゴリズムほぼ完成品
 //一部不具合があるが、FieldMasuの生成やUnitのtgtCbなどが原因かと
 
-package monarch;
+package field;
 
 import java.io.*;
 import java.util.*;

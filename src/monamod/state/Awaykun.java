@@ -7,10 +7,11 @@ import javafx.geometry.Point2D;
 
 
 //オリジナルパック
-import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
-import monarch.Scouter;
-import monarch.ScouterD;
-import monarch.FieldMasu;
+import unit.Unit;
+import field.Scouter;
+import field.ScouterD;
+import field.FieldMasu;
+import field.FtcntMapping;
 
 
 public class Awaykun extends Statekun {
@@ -26,6 +27,7 @@ public class Awaykun extends Statekun {
 	int slfFtcnt, btlFtcnt;
 	int progCnt = 0;//progressCount。進捗。
 	Point2D awyPd;
+	
 
 
 	//コンストラクタ
@@ -97,9 +99,14 @@ public class Awaykun extends Statekun {
 		@Override
 		protected void goaled(boolean boo) {//目的地についた後
 			work.nextProcess(boo);
-				//if(un.getTeam() == 1) { print("AWAY  GOAL", awyPd); }
+				if(un.getTeam() == 1) { print("AWAY  GOAL", awyPd); }
 		}
 //susumukun--------------
+
+	private void nextAway(Point2D pd, Point2D btlPd) {
+	}
+
+
 
 
 	private void nextAway() {//次に逃げる場所
@@ -171,6 +178,7 @@ public class Awaykun extends Statekun {
 		return (int)pd.getY();
 	}
 	//------------------------------------------
+
 
 
 	private void printArr(String str, List<?> arr) {

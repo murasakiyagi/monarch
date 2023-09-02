@@ -5,9 +5,13 @@ import java.util.*;
 
 import javafx.scene.layout.Pane;
 
+import engine.QuickUtil;
+import engine.Panes;
+import engine.PanesSupport;
+import field.FieldManager;
+import field.FieldMasu;
 import unit.UnitManager;
 import unit.Unit;
-import engine.QuickUtil;
 
 /*has a
 KeyHandler
@@ -20,23 +24,30 @@ public class GameControler {
 	boolean play;
 	boolean reset;
 
+	ChiefManager cf;
 	FieldMasu fl;
 	FieldManager fm;
 	Pane p;
 	Unit un;
 	Unit unitA;
 	UnitManager mana;
-	
 
-	public GameControler(FieldManager fm, Pane p) {
-		this.fm = fm;
+	PanesSupport sup;
+	HeadUpDisplay hud;
+
+	public GameControler(ChiefManager cf) {
+		this.cf = cf;
+		this.fm = cf.getFm();
 		this.fl = fm.getFl();
-		this.p = p;
-		
+		this.p = new Pane();
+		p.setMouseTransparent(false);
 		play = false;
 		reset = true;//肝
 
-		mana = new UnitManager(fm);
+		mana = cf.getUm();
+
+			hud = new HeadUpDisplay();
+			hud.init();
 	}
 
 
@@ -58,9 +69,7 @@ public class GameControler {
 	//Handlerに使われる
 	public void changePlay(boolean isP, boolean isQ) {
 		if(isP) { play = true; }
-		if(isQ) { play = false;
-// 		 mana.debug();
-		}
+		if(isQ) { play = false; }
 	}
 
 	public void butaiSetting(boolean isV) {//
@@ -72,6 +81,7 @@ public class GameControler {
 			p.getChildren().clear();
 			p.getChildren().add(fm.getPane());
 			unitSetting();
+				p.getChildren().add(hud.getPane());
 		}
 		
 	}
@@ -95,6 +105,8 @@ public class GameControler {
 	}
 
 // 	======================
+	public ChiefManager getCf() { return cf; }
+	public Pane getPane() { return p; }
 	public UnitManager getMana() { return mana; }
 
 

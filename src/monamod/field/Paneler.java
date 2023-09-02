@@ -1,4 +1,4 @@
-package monarch;
+package field;
 
 import java.io.*;
 import java.util.*;
@@ -10,28 +10,33 @@ import engine.QuickUtil;
 import unit.Unit;
 
 /*use a
-FieldMasu
+FieldMasu : 
 BuildTask
-Susumukunまだ使ってない
-UnitManager
+Susumukun : まだ使ってない
+UnitManager : 
 */
 
 
 public class Paneler {
 
-	static public HashMap<Point2D, Paneler> panelMap = new HashMap<Point2D, Paneler>();
+	public static HashMap<Point2D, Paneler> panelMap = new HashMap<Point2D, Paneler>();
+	private Map<Point2D, Integer> ftcntMap;
+	private static FtcntMapping ft;
 // 	int row, col;
 // 	ImageView view;
 	boolean human = false;
 	boolean house = false;
-	int team = 0;;
+	int team = 0;
 	int objNum = 0;
 
 	boolean ride = true;//乗っていいか
 	boolean build = true;//建てていいか
 
+// 	普通用
 	public Paneler() {}
-	public Paneler(HashSet<Point2D> walkSet) {
+// 	static用
+	public Paneler(FtcntMapping ft, HashSet<Point2D> walkSet) {
+		this.ft = ft;
 		panelMap.clear();
 		panelMapping(walkSet);
 	}
@@ -39,6 +44,7 @@ public class Paneler {
 		private void panelMapping(HashSet<Point2D> walkSet) {
 			for(Point2D pd : walkSet) {
 				panelMap.put(pd, new Paneler());
+				ftcntMap = ft.createMap(pd);
 			}
 		}
 		
@@ -46,20 +52,20 @@ public class Paneler {
 		return panelMap.get(pd);
 	}
 
-	static public boolean setBuild(Point2D pd, int team) {
+	public static boolean setBuild(Point2D pd, int team) {
 		return pn(pd).setBuild(team);
 	}
-	static public boolean setRide(Point2D pd, int team, int objNum) {
+	public static boolean setRide(Point2D pd, int team, int objNum) {
 		return pn(pd).setRide(team, objNum);
 	}
-	static public void resetBuild(Point2D pd) {
+	public static void resetBuild(Point2D pd) {
 		pn(pd).resetBuild();
 	}
-	static public void resetRide(Point2D pd) {
+	public static void resetRide(Point2D pd) {
 		pn(pd).resetRide();
 	}
 
-	static public void resetUnit(Point2D pd, int objNum) {
+	public static void resetUnit(Point2D pd, int objNum) {
 		if(objNum == 1) {
 			pn(pd).resetRide();
 		} else {
@@ -67,11 +73,11 @@ public class Paneler {
 		}
 	}
 
-	static public void unsetUnit(Point2D pd) {
+	public static void unsetUnit(Point2D pd) {
 		pn(pd).unsetUnit();
 	}
 
-// 	static public void allCheck() {
+// 	public static void allCheck() {
 // 		for(Point2D pd : panelMap.keySet()) {
 // 			nowState();
 // 		}
@@ -159,6 +165,17 @@ public class Paneler {
 			}
 		}
 	}
+	
+
+
+// 	ゲッター
+	public Map<Point2D, Integer> getFtcntMap() { return ftcntMap; }
+	public FtcntMapping getFt() { return ft; }
+	
+	public void panelPrint() {
+		ft.panelPrint(ftcntMap);
+	}
+
 	
 	QuickUtil qu = new QuickUtil(this);//サブクラスも大丈夫
 	public void print(Object... objs) {

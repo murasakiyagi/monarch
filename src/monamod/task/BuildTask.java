@@ -9,7 +9,7 @@ import javafx.util.*;
 import engine.QuickUtil;
 import unit.Unit;//--source-pathではなく--class-pathで/senryakuを指定
 import state.Work;
-import monarch.Paneler;
+import field.Paneler;
 
 public class BuildTask implements TaskFace {
 

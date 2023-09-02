@@ -5,10 +5,11 @@ import java.util.*;
 
 
 import engine.QuickUtil;
+import monarch.ManagerFace;
 import unit.Unit;
 
 
-public class StateManager {
+public class StateManager implements ManagerFace {
 
 	private Unit un;
 	private Map<String,StateFace> stateMap = new HashMap<String,StateFace>();
@@ -64,6 +65,10 @@ public class StateManager {
 		return callName(keep);
 	}
 
+	public void register(ManagerFace mf) {};
+	public void remove(ManagerFace mf) {};
+	public void update() {};
+	public void notifyMana() {};
 
 
 	//--------------------------
